@@ -21,9 +21,6 @@ if not openai.api_key:
 with open("styles.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Set up your OpenAI API key
-
-
 # Load the BLIP model and processor
 device = "cuda" if torch.cuda.is_available() else "cpu"
 blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
@@ -66,6 +63,16 @@ def generate_story_from_captions(captions, max_tokens, genre):
     )
     story = response['choices'][0]['message']['content'].strip()
     return story
+
+# Function to check remaining credits (usage tracking)
+def check_openai_usage():
+    try:
+        usage = openai.Usage.retrieve()
+        remaining_credits = usage['total_usage']  # You can refine this based on what details you need
+        return remaining_credits
+    except openai.error.OpenAIError as e:
+        st.error(f"Error retrieving usage: {e}")
+        return 0
 
 # Manage session state for authentication
 if "authenticated" not in st.session_state:
@@ -115,64 +122,70 @@ else:
     # Main app content (already logged in)
     st.title("Interactive AI Storyteller")
 
-    # Sidebar for background selection
-    st.sidebar.write("#### Select Background Color")
-    selected_background = st.sidebar.radio(
-        "Background Color", options=list(background_options.keys()), label_visibility="collapsed"
-    )
-    st.session_state.selected_background = background_options[selected_background]
+    # Check remaining credits before allowing story generation
+    remaining_credits = check_openai_usage()
 
-    # Sidebar for genre selection (after background selection)
-    genre_options = ["Fantasy", "Science-fiction", "Horror", "Mystery", "Historical"]
-    selected_genre = st.sidebar.selectbox("#### Select Story Genre", options=genre_options, label_visibility="visible")
+    if remaining_credits > 0:
+        # Sidebar for background selection
+        st.sidebar.write("#### Select Background Color")
+        selected_background = st.sidebar.radio(
+            "Background Color", options=list(background_options.keys()), label_visibility="collapsed"
+        )
+        st.session_state.selected_background = background_options[selected_background]
 
-    # Apply the selected background style
-    st.markdown(f"""
-    <style>
-        .stApp {{
-            background-image: url("{st.session_state.selected_background}");
-            background-size: cover;
-            background-position: center;
-        }}
-    </style>
-    """, unsafe_allow_html=True)
+        # Sidebar for genre selection (after background selection)
+        genre_options = ["Fantasy", "Science-fiction", "Horror", "Mystery", "Historical"]
+        selected_genre = st.sidebar.selectbox("#### Select Story Genre", options=genre_options, label_visibility="visible")
 
-    # File uploader for images
-    uploaded_files = st.file_uploader(
-        "Upload Image Files", accept_multiple_files=True, type=['jpg', 'jpeg', 'png'], label_visibility="visible"
-    )
+        # Apply the selected background style
+        st.markdown(f"""
+        <style>
+            .stApp {{
+                background-image: url("{st.session_state.selected_background}");
+                background-size: cover;
+                background-position: center;
+            }}
+        </style>
+        """, unsafe_allow_html=True)
 
-    # Dropdown to select max tokens for story generation
-    max_tokens = st.selectbox(
-        "Select Story Length (Tokens)", options=[750, 1000, 1250, 1500], index=2, label_visibility="visible"
-    )
+        # File uploader for images
+        uploaded_files = st.file_uploader(
+            "Upload Image Files", accept_multiple_files=True, type=['jpg', 'jpeg', 'png'], label_visibility="visible"
+        )
 
-    if uploaded_files:
-        captions = []
-        images = []
+        # Dropdown to select max tokens for story generation
+        max_tokens = st.selectbox(
+            "Select Story Length (Tokens)", options=[500, 750], index=2, label_visibility="visible"
+        )
 
-        # Process uploaded images
-        for uploaded_file in uploaded_files:
-            try:
-                img = Image.open(BytesIO(uploaded_file.read()))
-                if img is None:
-                    st.error("Failed to load image.")
+        if uploaded_files:
+            captions = []
+            images = []
+
+            # Process uploaded images
+            for uploaded_file in uploaded_files:
+                try:
+                    img = Image.open(BytesIO(uploaded_file.read()))
+                    if img is None:
+                        st.error("Failed to load image.")
+                    else:
+                        img = img.convert("RGB")
+                        st.image(img, caption="Uploaded Image")  # Ensure this works with your version of Streamlit
+                    # Generate and display caption
+                    caption = generate_image_caption(img)
+                    captions.append(caption)
+                    st.write(f"**Caption:** {caption}")
+
+                except Exception as e:
+                    st.error(f"Error processing image {uploaded_file.name}: {e}")
+
+            # Button to generate the story based on selected genre
+            if st.button("Generate Story"):
+                if captions:
+                    story = generate_story_from_captions(captions, max_tokens, selected_genre)
+                    st.subheader("Generated Story")
+                    st.write(story)
                 else:
-                    img = img.convert("RGB")
-                    st.image(img, caption="Uploaded Image")  # Ensure this works with your version of Streamlit
-                # Generate and display caption
-                caption = generate_image_caption(img)
-                captions.append(caption)
-                st.write(f"**Caption:** {caption}")
-
-            except Exception as e:
-                st.error(f"Error processing image {uploaded_file.name}: {e}")
-
-        # Button to generate the story based on selected genre
-        if st.button("Generate Story"):
-            if captions:
-                story = generate_story_from_captions(captions, max_tokens, selected_genre)
-                st.subheader("Generated Story")
-                st.write(story)
-            else:
-                st.warning("No captions were generated. Please upload valid images.")
+                    st.warning("No captions were generated. Please upload valid images.")
+    else:
+        st.error("You have exhausted your free credits. Please upgrade your plan to continue using the API.")
