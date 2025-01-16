@@ -4,3 +4,4 @@ transformers
 streamlit
 pillow 
 python-dotenv
+requests
