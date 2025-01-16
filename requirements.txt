@@ -1,5 +1,6 @@
-python - version 3.12.1
-torch - version 2.5.1
-transformers - version 4.48.0
-streamlit - version 1.39.0
-pillow - version 10.0.1
+python
+openai
+torch
+transformers
+streamlit
+pillow 
