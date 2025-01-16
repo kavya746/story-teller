@@ -1,0 +1,54 @@
+/* Background Image */
+.stApp {
+    background-image: url('https://i.pinimg.com/564x/2c/42/fd/2c42fdca18965807e6f56f19ef33f439.jpg'); /* Default background */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Button Customization */
+.stButton>button {
+    background-color: #4CAF50;  /* Light theme button color */
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px 24px;
+}
+
+/* Dark Theme Button Customization */
+[data-theme="dark"] .stButton>button {
+    background-color: #FF5722;  /* Dark theme button color */
+}
+
+/* Text Styling */
+.stText, .stTitle, .stHeader, .stSubheader {
+    color: white;  /* Ensures text is visible on background */
+}
+
+/* Title Styling */
+.stTitle {
+    text-align: center;
+}
+
+/* Logout Button Styling */
+.logout-button-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.logout-button {
+    font-size: 16px;
+    color: white;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    border: none;
+}
+
+.logout-button:hover {
+    background-color: #45a049;
+}
