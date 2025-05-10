@@ -1,7 +1,8 @@
-openai==0.28
 torch
 transformers
 streamlit
 pillow 
 python-dotenv
 requests
+google-generativeai
+firebase-admin
