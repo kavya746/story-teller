@@ -1,6 +1,3 @@
-Here is a complete, well-structured `README.md` file for your **Interactive AI Storyteller** project that you can include in your GitHub repository:
-
----
 
 # 🧠📖 Interactive AI Storyteller
 
