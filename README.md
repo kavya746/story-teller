@@ -1,4 +1,6 @@
 
+Check it here - https://storyteller-using-ai.streamlit.app/
+
 # 🧠📖 Interactive AI Storyteller
 
 An AI-powered web app that generates captivating stories based on images you upload! This Streamlit-based application uses **BLIP** for image captioning and **Gemini (Google Generative AI)** to create stories in various genres. User authentication is handled with Firebase.
