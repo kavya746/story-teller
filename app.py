@@ -4,7 +4,7 @@ from PIL import Image
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from io import BytesIO
 import google.generativeai as genai
-from google.generativeai.types import FinishReason
+#from google.generativeai.types import FinishReason
 from dotenv import load_dotenv
 import os
 from auth import show_login_signup,apply_auth_background  # Import auth UI
@@ -66,21 +66,21 @@ def generate_story_with_gemini(captions, max_tokens, genre):
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(prompt, generation_config={"max_output_tokens": max_tokens})
-        #return response.text.strip()
-        if response.candidates and response.candidates[0].content:
-            return response.text.strip()
-        else:
-            # Handle cases where the response is empty (e.g., max tokens reached or safety block)
-            finish_reason = response.candidates[0].finish_reason.name if response.candidates else "UNKNOWN"
+        return response.text.strip()
+        # if response.candidates and response.candidates[0].content:
+        #     return response.text.strip()
+        # else:
+        #     # Handle cases where the response is empty (e.g., max tokens reached or safety block)
+        #     finish_reason = response.candidates[0].finish_reason.name if response.candidates else "UNKNOWN"
             
-            if finish_reason == FinishReason.MAX_TOKENS.name:
-                st.warning("Story generation stopped because the maximum length was reached. Try selecting a longer length.")
-            elif finish_reason == FinishReason.SAFETY.name:
-                st.error("Story generation was blocked by safety filters. Try different images or genre.")
-            else:
-                st.error(f"Gemini API error: No content returned. Finish Reason: {finish_reason}.")
+        #     if finish_reason == FinishReason.MAX_TOKENS.name:
+        #         st.warning("Story generation stopped because the maximum length was reached. Try selecting a longer length.")
+        #     elif finish_reason == FinishReason.SAFETY.name:
+        #         st.error("Story generation was blocked by safety filters. Try different images or genre.")
+        #     else:
+        #         st.error(f"Gemini API error: No content returned. Finish Reason: {finish_reason}.")
             
-            return "Could not generate the story."
+        #     return "Could not generate the story."
     except Exception as e:
         st.error(f"Gemini API error: {e}")
         return "An error occurred while generating the story."

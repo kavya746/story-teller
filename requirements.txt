@@ -1,8 +1,8 @@
-torch==2.3.1+cpu
+torch
 transformers
 streamlit
 pillow 
 python-dotenv
 requests
-google-generativeai>=0.13.0
+google-generativeai
 firebase-admin
