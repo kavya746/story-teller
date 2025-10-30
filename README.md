@@ -12,7 +12,7 @@ An AI-powered web app that generates captivating stories based on images you upl
 * 🔐 **User Authentication**: Signup/Login via Firebase.
 * 🖼️ **Multi-Image Upload**: Upload multiple images to build a visual narrative.
 * 📝 **Image Captioning**: Uses BLIP (from Hugging Face) to generate intelligent captions.
-* 🤖 **AI Story Generation**: Uses Gemini 1.5 Flash API to create stories based on image captions.
+* 🤖 **AI Story Generation**: Uses Gemini 2.5 Flash API to create stories based on image captions.
 * 🎭 **Genre Selection**: Choose from Fantasy, Sci-Fi, Horror, Mystery, and Historical.
 * 🎨 **Custom Backgrounds**: Select a visual background theme for your storytelling experience.
 
@@ -26,7 +26,7 @@ An AI-powered web app that generates captivating stories based on images you upl
 | `Streamlit`            | Web App UI                          |
 | `Firebase`             | Authentication & Firestore Database |
 | `BLIP (Salesforce)`    | Image Captioning                    |
-| `Gemini 1.5 Flash API` | Story Generation                    |
+| `Gemini 2.5 Flash API` | Story Generation                    |
 | `Python`               | Backend logic                       |
 | `dotenv`               | Environment configuration           |
 
@@ -106,7 +106,7 @@ streamlit run app.py
 1. Sign up or login.
 2. Upload one or more images.
 3. Select a background and a genre (e.g., Horror, Mystery).
-4. Choose story length (e.g., 500 or 750 tokens).
+4. Choose story length (e.g., 1024 or 2048 tokens).
 5. Click **Generate Story** to see the magic!
 
 ---
