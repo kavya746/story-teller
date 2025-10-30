@@ -61,7 +61,8 @@ def generate_story_with_gemini(captions, max_tokens, genre):
         "Historical": "Write a historically accurate story, set in a specific historical period with authentic events and characters."
     }
 
-    prompt = f"{genre_prompts.get(genre, '')} Based on the following captions:\n\n" + "\n".join(captions)
+    prompt = (f"{genre_prompts.get(genre, '')} " "Write a concise story (within 3-5 paragraphs) based on these captions:\n\n"
+    + "\n".join(captions))
 
     try:
         model = genai.GenerativeModel("gemini-2.5-flash")
@@ -123,7 +124,7 @@ st.markdown(f"""
 uploaded_files = st.file_uploader("Upload Image Files", accept_multiple_files=True, type=['jpg', 'jpeg', 'png'])
 
 # Story length
-options=[1024, 2048] 
+options=[1024, 2048, 4096, 8192] 
 default_index = 1 if len(options) > 1 else 0
 max_tokens = st.selectbox("Select Story Length (Tokens)", options=options, index=default_index)
 
