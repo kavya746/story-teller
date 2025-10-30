@@ -63,7 +63,7 @@ def generate_story_with_gemini(captions, max_tokens, genre):
     prompt = f"{genre_prompts.get(genre, '')} Based on the following captions:\n\n" + "\n".join(captions)
 
     try:
-        model = genai.GenerativeModel("models/gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(prompt, generation_config={"max_output_tokens": max_tokens})
         return response.text.strip()
     except Exception as e:
